@@ -9,8 +9,8 @@
 #include <QPainter>
 #include "addressview.h"
 
-QGroupBox *createCacheType() {
-    QGroupBox *groupBox = new QGroupBox();
+void CacheView::createCacheType() {
+    cacheTypeGroupBox = new QGroupBox(this);
 
     QRadioButton *radio1 = new QRadioButton("Instruction cache");
     QRadioButton *radio2 = new QRadioButton("Data cache");
@@ -21,49 +21,54 @@ QGroupBox *createCacheType() {
     layout->addWidget(radio1);
     layout->addWidget(radio2);
     layout->addStretch(1);
-    groupBox->setLayout(layout);
-
-    return groupBox;
+    cacheTypeGroupBox->setLayout(layout);
 }
 
-QComboBox *createReplacementPolicy() {
-    QComboBox *replacementPolicyComboBox = new QComboBox(0);
+void CacheView::createReplacementPolicy() {
+    replacementPolicyComboBox = new QComboBox(this);
     replacementPolicyComboBox->insertItem(0, "LRU");
     replacementPolicyComboBox->insertItem(1, "LFU");
     replacementPolicyComboBox->insertItem(2, "Random");
-    return replacementPolicyComboBox;
 }
 
-QGroupBox *createCacheTypeParemeters() {
-    QFormLayout *layout = new QFormLayout;
-    QGroupBox *groupBox = new QGroupBox();
+QGroupBox *CacheView::createCacheTypeParemeters() {
+    createCacheType();
+    createReplacementPolicy();
 
-    layout->addRow("Replacement policy", createReplacementPolicy());
-    layout->addRow("Cache type", createCacheType());
+    QFormLayout *layout = new QFormLayout;
+    QGroupBox *groupBox = new QGroupBox(this);
+
+    layout->addRow("Replacement policy", replacementPolicyComboBox);
+    layout->addRow("Cache type", cacheTypeGroupBox);
     groupBox->setLayout(layout);
     return groupBox;
 }
 
-QGroupBox *createCacheSizeParemeters() {
-    QGroupBox *groupBox = new QGroupBox();
+QGroupBox *CacheView::createCacheSizeParemeters() {
+    QGroupBox *groupBox = new QGroupBox(this);
 
-    AddressView *addressView = new AddressView(0);
-    BitSlider *lineSize = new BitSlider(0, true);
-    BitSlider *setsSlider = new BitSlider(0, false);
-    QSpinBox *waysSpinBox = new QSpinBox(0);
+    AddressView *addressView = new AddressView(this);
+    mainMemorySizeSlider = new BitSlider(this, true);
+    lineSizeSlider = new BitSlider(this, true);
+    setsSlider = new BitSlider(this, false);
+    waysSpinBox = new QSpinBox(this);
 
     QFormLayout *layout = new QFormLayout;
     layout->addRow(addressView);
-    layout->addRow("Line size", lineSize);
+    layout->addRow("Main memory size", mainMemorySizeSlider);
+    layout->addRow("Line size", lineSizeSlider);
     layout->addRow("Number of sets", setsSlider);
     layout->addRow("Number of ways", waysSpinBox);
     groupBox->setLayout(layout);
 
-    QObject::connect(lineSize, SIGNAL(pointerSizeChanged(int)), addressView, SLOT(setNumOffsetBits(int)));
+    QObject::connect(mainMemorySizeSlider, SIGNAL(pointerSizeChanged(int)), addressView, SLOT(setNumBits(int)));
+    QObject::connect(lineSizeSlider, SIGNAL(pointerSizeChanged(int)), addressView, SLOT(setNumOffsetBits(int)));
     QObject::connect(setsSlider, SIGNAL(pointerSizeChanged(int)), addressView, SLOT(setNumSetBits(int)));
 
+    mainMemorySizeSlider->setPointerRange(8, 28);
+    mainMemorySizeSlider->setPointerValue(8);
     setsSlider->setPointerRange(0, 16);
-    lineSize->setPointerRange(1, 14);
+    lineSizeSlider->setPointerRange(1, 14);
     waysSpinBox->setRange(1, 16);
     // set the values after connecting controls to labels
     setsSlider->setPointerValue(0);
@@ -74,7 +79,7 @@ QGroupBox *createCacheSizeParemeters() {
 
 CacheView::CacheView(QWidget *parent) : QWidget(parent)
 {
-    QLayout *layout = new QHBoxLayout();
+    QLayout *layout = new QVBoxLayout();
     setLayout(layout);
 
     layout->addWidget(createCacheTypeParemeters());
