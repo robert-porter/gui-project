@@ -8,20 +8,25 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += address.h \
+HEADERS += \
            addressview.h \
            bitslider.h \
            cachesimulator.h \
-           cacheview.h \
            resultsview.h \
            traceview.h \
-    simulationcontrolsview.h
-SOURCES += address.cpp \
+    simulationcontrolsview.h \
+    mainwindow.h \
+    parametersview.h
+SOURCES += \
            addressview.cpp \
            bitslider.cpp \
            cachesimulator.cpp \
-           cacheview.cpp \
            main.cpp \
            resultsview.cpp \
            traceview.cpp \
-    simulationcontrolsview.cpp
+    simulationcontrolsview.cpp \
+    mainwindow.cpp \
+    parametersview.cpp
+
+OTHER_FILES += \
+    testtrace.txt

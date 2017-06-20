@@ -2,7 +2,6 @@
 #define BITSLIDER_H
 
 #include <QWidget>
-#include <QLabel>
 #include <QSlider>
 
 
@@ -11,10 +10,9 @@ class BitSlider : public QWidget {
 public:
     BitSlider(QWidget *parent, bool memory);
     void setPointerRange(int a, int b) { slider->setRange(a, b); }
-    void setPointerValue(int a) { slider->setValue(a); }
+    int getPointerSize() const { return pointerSize; }
 public slots:
     void setPointerSize(int value);
-
 signals:
     void memorySizeChangedString(QString newValue);
     void memorySizeChanged(int n);

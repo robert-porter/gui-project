@@ -1,14 +1,21 @@
+#include <QTextBlock>
 #include "traceview.h"
 
 
 TraceView::TraceView(QWidget *parent) : QPlainTextEdit(parent) {
+    start = 0;
+    setStart(start);
+}
 
-    for(int i = 0; i < 100; i++) {
-        this->appendPlainText(QString("   ") + QString("0xFFFFFFFF"));
+void TraceView::setTrace(std::vector<QString> addresses) {
+    this->clear();
+    for(size_t i = 0; i < addresses.size(); i++) {
+        appendPlainText(QString("   ") + addresses[i]);
     }
 
     start = 0;
     setStart(start);
+
 }
 
 void TraceView::setLeadingText(QString t, int position) {

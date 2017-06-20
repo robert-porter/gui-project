@@ -1,10 +1,15 @@
 #ifndef SIMULATIONCONTROLSVIEW_H
 #define SIMULATIONCONTROLSVIEW_H
 
-class SimulationControlsView
+#include <QWidget>
+#include <QPushButton>
+
+class SimulationControlsView : public QWidget
 {
 public:
-    SimulationControlsView();
+    SimulationControlsView(QWidget *parent);
+
+    QPushButton *startButton;
 };
 
 #endif // SIMULATIONCONTROLSVIEW_H

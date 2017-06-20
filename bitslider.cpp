@@ -19,23 +19,6 @@ void fixLabelSize(QLabel *l, int n) {
     l->setText("");
 }
 
-QWidget *attachOutputLabel(QWidget *widget, int labelSize) {
-
-    QWidget *container = new QWidget(0);
-    QLayout *layout = new QHBoxLayout();
-    container->setLayout(layout);
-
-    QLabel *label = new QLabel(container);
-    fixLabelSize(label, labelSize);
-
-    QObject::connect(widget, SIGNAL(valueChanged(int)), label, SLOT(setNum(int)));
-
-    layout->addWidget(widget);
-    layout->addWidget(label);
-
-    return container;
-}
-
 QString binaryPrefix(unsigned long long x) {
     if(x < 1024)
         return QString::number(x) + QString("B");
@@ -68,15 +51,14 @@ BitSlider::BitSlider(QWidget *parent, bool memory) : QWidget(parent) {
         label->setText("1");
     }
     layout->addWidget(label);
-
     layout->addWidget(slider);
-
 }
 
 void BitSlider::setPointerSize(int value)
 {
     if (pointerSize != value) {
         pointerSize = value;
+        slider->setValue(value);
         unsigned long long memorySize = static_cast<unsigned long long>(1) << pointerSize;
         emit memorySizeChangedString(binaryPrefix(memorySize));
         emit memorySizeChanged(memorySize);

@@ -2,19 +2,27 @@
 #define CACHEVIEW_H
 
 #include <QWidget>
-#include "bitslider.h"
 #include <QSpinBox>
 #include <QComboBox>
 #include <QGroupBox>
-#include <QRadioButton>
-#include <QFormLayout>
-#include <QPainter>
+#include "bitslider.h"
+#include "cachesimulator.h"
+#include "simulationcontrolsview.h"
 
-class CacheView : public QWidget
+class ParametersView : public QWidget
 {
     Q_OBJECT
 public:
-    CacheView(QWidget *parent);
+    ParametersView(QWidget *parent);
+
+public slots:
+    void mainMemorySizeChanged(int n);
+    void lineSizeChanged(int n);
+    void numSetsChanged(int n);
+signals:
+    void startSimulation(CacheSimulationParameters parameters);
+protected slots:
+    void start();
 protected:
     void createCacheType();
     void createReplacementPolicy();
@@ -27,6 +35,7 @@ protected:
     BitSlider *lineSizeSlider;
     BitSlider *setsSlider;
     QSpinBox *waysSpinBox;
+    SimulationControlsView *simulationControlsView;
 };
 
 #endif // CACHEVIEW_H

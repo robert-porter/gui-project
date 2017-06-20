@@ -10,8 +10,8 @@ class AddressView : public QWidget {
 public:
     AddressView(QWidget *parent);
 protected:
-    void drawBitBlock(QPainter &painter, int xStart, int numBits, int blockIndex, QColor color, QString text, int widgetWidth);
-    void drawPointerSizeLabel(QPainter &painter, int numBits);
+    void drawBitBlock(QPainter &painter, int xStart, int y, int numBits, int blockIndex, QColor color, QString text, int widgetWidth);
+    void drawPointerSizeLabel(QPainter &painter, int y, int numBits);
     void paintEvent(QPaintEvent *);
     QSize sizeHint() const;
 
