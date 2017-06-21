@@ -3,8 +3,6 @@
 
 
 TraceView::TraceView(QWidget *parent) : QPlainTextEdit(parent) {
-    start = 0;
-    setStart(start);
 }
 
 void TraceView::setTrace(std::vector<QString> addresses) {
@@ -12,10 +10,6 @@ void TraceView::setTrace(std::vector<QString> addresses) {
     for(size_t i = 0; i < addresses.size(); i++) {
         appendPlainText(QString("   ") + addresses[i]);
     }
-
-    start = 0;
-    setStart(start);
-
 }
 
 void TraceView::setLeadingText(QString t, int position) {
@@ -27,22 +21,25 @@ void TraceView::setLeadingText(QString t, int position) {
 
     this->setTextCursor(cursor);
     cursor.beginEditBlock();
-
     cursor.removeSelectedText();
     cursor.insertText(t);
     cursor.endEditBlock();
 }
 
-void TraceView::setStart(int position) {
-
-    setLeadingText("   ", start);
-    start = position;
-    setLeadingText("S: ", start);
+void TraceView::toggleBreakpoint(int position) {
+    if(breakpoints.find(position) != breakpoints.end()) {
+        breakpoints.erase(breakpoints.find(position));
+        setLeadingText("   ", position);
+    }
+    else {
+        breakpoints.insert(position);
+        setLeadingText("B: ", position);
+    }
 }
 
 
 void TraceView::mousePressEvent(QMouseEvent *e) {
     QWidget::mousePressEvent(e);
-    setStart(cursorForPosition(e->pos()).blockNumber());
+    toggleBreakpoint(cursorForPosition(e->pos()).blockNumber());
 }
 
