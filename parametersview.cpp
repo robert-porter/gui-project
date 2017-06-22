@@ -90,15 +90,14 @@ QGroupBox *ParametersView::createCacheSizeParemeters() {
 }
 
 void ParametersView::start() {
-    CacheSimulationParameters parameters;
-    parameters.pointerSize = mainMemorySizeSlider->getPointerSize();
-    parameters.lineSize = static_cast<unsigned long long>(1) << lineSizeSlider->getPointerSize();
-    parameters.numSets = setsSlider->getPointerSize();
-    parameters.numWays = waysSpinBox->value();
-    parameters.type = getSelectedCacheType(cacheTypeGroupBox);
-    parameters.replacementPolicy = REPLACEMENT_POLICY(replacementPolicyComboBox->itemData(replacementPolicyComboBox->currentIndex()).toInt());
-   // unsigned long *trace;
-   // int traceSize;
+    CacheSimulationParameters parameters(
+                mainMemorySizeSlider->getPointerSize(),
+                static_cast<unsigned long long>(1) << lineSizeSlider->getPointerSize(),
+                static_cast<unsigned long long>(1) << setsSlider->getPointerSize(),
+                waysSpinBox->value(),
+                getSelectedCacheType(cacheTypeGroupBox),
+                REPLACEMENT_POLICY(replacementPolicyComboBox->itemData(replacementPolicyComboBox->currentIndex()).toInt()));
+
     emit startSimulation(parameters);
 }
 

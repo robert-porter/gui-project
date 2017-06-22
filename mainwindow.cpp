@@ -42,6 +42,7 @@ void MainWindow::fileOpenTriggered() {
         addresses.push_back(line.trimmed());
     }
 
+    cacheSimulator.setTrace(addresses);
     traceView->setTrace(addresses);
 }
 
