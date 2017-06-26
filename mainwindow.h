@@ -5,6 +5,7 @@
 #include "traceview.h"
 #include "parametersview.h"
 #include "resultsview.h"
+#include "graphicsview.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,7 +24,10 @@ private:
     TraceView *traceView;
     ResultsView *resultsView;
     ParametersView *parametersView;
+    GraphicsView *graphicsView;
+
     CacheSimulator cacheSimulator;
+
 };
 
 #endif // MAINWINDOW_H

@@ -88,11 +88,17 @@ MainWindow::MainWindow() : QMainWindow(0)
     traceView = new TraceView(this);
     parametersView = new ParametersView(this);
     resultsView = new ResultsView(this);
+    graphicsView = new GraphicsView(this);
 
     connect(parametersView, SIGNAL(startSimulation(CacheSimulationParameters)), &cacheSimulator, SLOT(runSimulation(CacheSimulationParameters)));
     connect(&cacheSimulator, SIGNAL(resultsChanged(CacheSimulationResults)), resultsView, SLOT(setResults(CacheSimulationResults)));
 
-    setCentralWidget(traceView);
+    QWidget *centralWidget = new QWidget(this);
+    QHBoxLayout *centralLayout = new QHBoxLayout(centralWidget);
+    centralWidget->setLayout(centralLayout);
+    centralLayout->addWidget(traceView);
+    centralLayout->addWidget(graphicsView);
+    setCentralWidget(centralWidget);
 
     // order matters here
     createFileMenu();
