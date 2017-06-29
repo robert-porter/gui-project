@@ -5,12 +5,12 @@ struct Vector3 {
     Vector3() { }
     Vector3(float x, float y, float z) { this->x = x; this->y = y; this->z = z; }
     operator const float *() const { return &x; }
-    const Vector3& operator+(const Vector3 &rhs) const { return Vector3(this->x + rhs.x, this->y + rhs.y, this->z + rhs.z); }
-    const Vector3& operator-(const Vector3 &rhs) const { return Vector3(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z); }
+    Vector3 operator+(const Vector3 &rhs) const { return Vector3(this->x + rhs.x, this->y + rhs.y, this->z + rhs.z); }
+    Vector3 operator-(const Vector3 &rhs) const { return Vector3(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z); }
     float x, y, z;
 };
 
-const Vector3 &operator*(float s, const Vector3 &v) {
+Vector3 operator*(float s, const Vector3 &v) {
     return Vector3(s*v.x, s*v.y, s*v.z);
 }
 
@@ -202,6 +202,7 @@ GraphicsView::GraphicsView(QWidget *parent) : QGLWidget(parent)
     time.start();
     initHexagonVertices(100);
     initColors();
+    shape.transition = 0;
 
 }
 

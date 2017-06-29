@@ -16,10 +16,12 @@ protected:
     void createFileMenu();
     void createHelpMenu();
     void createDockViewsAndViewMenu();
+    void createConvertMenu();
 public slots:
     void fileOpenTriggered();
     void fileSaveAsTriggered();
     void showHelp();
+    void convertHexFile();
 private:
     TraceView *traceView;
     ResultsView *resultsView;

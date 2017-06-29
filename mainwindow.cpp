@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QDockWidget>
+#include <iostream>
 #include <QMenuBar>
 #include <QFileDialog>
 #include "mainwindow.h"
@@ -70,11 +71,39 @@ void MainWindow::createDockViewsAndViewMenu() {
     viewMenu->addAction(bDockWidget->toggleViewAction());
 }
 
+void MainWindow::createConvertMenu() {
+    QMenu *convertMenu = menuBar()->addMenu("Convert");
+    QAction *prepend0xAction = new QAction("Prepend 0x", this);
+    connect(prepend0xAction, SIGNAL(triggered()), this, SLOT(convertHexFile()));
+    convertMenu->addAction(prepend0xAction);
+}
+
 void MainWindow::createHelpMenu() {
     QMenu *helpMenu = menuBar()->addMenu("Help");
     QAction *showHelpAction = new QAction("Help", this);
     connect(showHelpAction, SIGNAL(triggered()), this, SLOT(showHelp()));
     helpMenu->addAction(showHelpAction);
+
+}
+
+void MainWindow::convertHexFile() {
+    QFile file("trace.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    std::vector<QString> addresses;
+    while (!file.atEnd()) {
+        QString line = file.readLine();
+        addresses.push_back(QString("0x" + line.trimmed()));
+    }
+
+    QFile outfile("tracehex.txt");
+    if (!outfile.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+    QTextStream out(&outfile);
+    for(size_t i = 0; i < addresses.size(); i++) {
+        out<<addresses[i]<<"\r\n";
+    }
 
 }
 
@@ -92,17 +121,19 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     connect(parametersView, SIGNAL(startSimulation(CacheSimulationParameters)), &cacheSimulator, SLOT(runSimulation(CacheSimulationParameters)));
     connect(&cacheSimulator, SIGNAL(resultsChanged(CacheSimulationResults)), resultsView, SLOT(setResults(CacheSimulationResults)));
-
+/*
     QWidget *centralWidget = new QWidget(this);
     QHBoxLayout *centralLayout = new QHBoxLayout(centralWidget);
     centralWidget->setLayout(centralLayout);
     centralLayout->addWidget(traceView);
     centralLayout->addWidget(graphicsView);
     setCentralWidget(centralWidget);
-
+*/
+    setCentralWidget(graphicsView);
     // order matters here
     createFileMenu();
     createDockViewsAndViewMenu();
+    createConvertMenu();
     createHelpMenu();
 
     show();
