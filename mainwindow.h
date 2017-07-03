@@ -6,6 +6,7 @@
 #include "parametersview.h"
 #include "resultsview.h"
 #include "graphicsview.h"
+#include "plotview.h"
 
 class MainWindow : public QMainWindow
 {
@@ -24,6 +25,7 @@ public slots:
     void convertHexFile();
 private:
     TraceView *traceView;
+    PlotView *plotView;
     ResultsView *resultsView;
     ParametersView *parametersView;
     GraphicsView *graphicsView;

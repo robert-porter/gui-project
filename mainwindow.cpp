@@ -118,18 +118,21 @@ MainWindow::MainWindow() : QMainWindow(0)
     parametersView = new ParametersView(this);
     resultsView = new ResultsView(this);
     graphicsView = new GraphicsView(this);
+    plotView = new PlotView(this);
 
     connect(parametersView, SIGNAL(startSimulation(CacheSimulationParameters)), &cacheSimulator, SLOT(runSimulation(CacheSimulationParameters)));
     connect(&cacheSimulator, SIGNAL(resultsChanged(CacheSimulationResults)), resultsView, SLOT(setResults(CacheSimulationResults)));
-/*
+    connect(parametersView, SIGNAL(changed(int,int,int,int)), plotView, SLOT(value(int,int,int,int)));
+    parametersView->emitChanged();
+
     QWidget *centralWidget = new QWidget(this);
     QHBoxLayout *centralLayout = new QHBoxLayout(centralWidget);
     centralWidget->setLayout(centralLayout);
-    centralLayout->addWidget(traceView);
+    centralLayout->addWidget(plotView);
     centralLayout->addWidget(graphicsView);
     setCentralWidget(centralWidget);
-*/
-    setCentralWidget(graphicsView);
+
+    //setCentralWidget(graphicsView);
     // order matters here
     createFileMenu();
     createDockViewsAndViewMenu();

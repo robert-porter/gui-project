@@ -27,8 +27,8 @@ MorphShape transition(MorphShape shape, float t) {
         MorphShape newShape;
         newShape.type = SHAPE_TYPE((shape.type + 1) % NUM_SHAPES);
         newShape.morphBegin = t;
-        newShape.morphEnd = t + 3.0f;
-        newShape.transition = t + 3.5f;
+        newShape.morphEnd = t + 1.0f;
+        newShape.transition = t + 2.5f;
         return newShape;
     }
     return shape;
@@ -52,7 +52,7 @@ void drawSegment(const Vector3& a, const Vector3 &b, float w) {
 void initHexagonVertices(float r) {
     for(int i = 0; i < 6; i++) {
         float theta = 1.0f * M_PI / 6.0f + float(i)*2.0f*M_PI / 6.0f;
-        hexagonVertices[i] = Vector3(r * cos(theta), r * sin(theta), 0);
+        hexagonVertices[i] = Vector3(r * cos(theta), r * sin(theta), 10);
     }
 }
 
@@ -150,7 +150,7 @@ void draw(MorphShape shape, float t) {
             drawCube(hexagonVertices[0],
                      hexagonVertices[2],
                      hexagonVertices[3],
-                     hexagonVertices[5], -100, tl);
+                     hexagonVertices[5], 3, tl);
             glPopMatrix();
         }
         else
@@ -188,26 +188,26 @@ void draw(MorphShape shape, float t) {
         drawCube(hexagonVertices[0],
                  hexagonVertices[2],
                  hexagonVertices[3],
-                 hexagonVertices[5], lerp(0.0f, -100.0f, tl));
+                 hexagonVertices[5], lerp(0.0f, 3.0f, tl));
     }
 }
 
 GraphicsView::GraphicsView(QWidget *parent) : QGLWidget(parent)
 {
-    this->setFixedSize(800, 800);
+    this->setFixedSize(400, 400);
 
     animationTimer.setSingleShot(false);
     connect(&animationTimer, SIGNAL(timeout()), this, SLOT(update()));
     animationTimer.start(25);
     time.start();
-    initHexagonVertices(100);
+    initHexagonVertices(3);
     initColors();
     shape.transition = 0;
 
 }
 
 void GraphicsView::initializeGL() {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
     glClearDepth(1.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -221,7 +221,10 @@ void GraphicsView::paintGL() {
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     float ftime = time.elapsed() * 0.001f;
-    glRotatef(ftime * 30, 0.4, 0, 0.5);
+    glTranslatef(0, 0, -14);
+    glRotatef(27*ftime, 1.0f, 0.0f, 0.0f);
+    glRotatef(79*ftime, 0.0f, 1.0f, 0.0f);
+    glRotatef(83*ftime, 0.0f, 0.0f, 1.0f);
     shape = transition(shape, ftime);
     draw(shape, ftime);
 
@@ -229,9 +232,14 @@ void GraphicsView::paintGL() {
 }
 
 void GraphicsView::resizeGL(int w, int h) {
+
+    glViewport(50, 50, 300, 300);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-200, 200, -200, 200, -200, 200);
+
+    glFrustum(-1, 1, -1, 1, 1.0f, 2000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
 }

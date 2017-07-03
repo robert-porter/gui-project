@@ -18,7 +18,8 @@ HEADERS += addressview.h \
            parametersview.h \
            resultsview.h \
            simulationcontrolsview.h \
-           traceview.h
+           traceview.h \
+    plotview.h
 SOURCES += addressview.cpp \
            bitslider.cpp \
            cachesimulator.cpp \
@@ -28,4 +29,5 @@ SOURCES += addressview.cpp \
            parametersview.cpp \
            resultsview.cpp \
            simulationcontrolsview.cpp \
-           traceview.cpp
+           traceview.cpp \
+    plotview.cpp

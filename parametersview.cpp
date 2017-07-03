@@ -82,7 +82,7 @@ QGroupBox *ParametersView::createCacheSizeParemeters() {
 
     mainMemorySizeSlider->setPointerRange(8, 28);
     // set the values after connecting controls to labels
-    mainMemorySizeSlider->setPointerSize(8);
+    mainMemorySizeSlider->setPointerSize(28);
     setsSlider->setPointerSize(0);
     waysSpinBox->setValue(1);
 
@@ -101,6 +101,14 @@ void ParametersView::start() {
     emit startSimulation(parameters);
 }
 
+void ParametersView::emitChanged() {
+    int a = mainMemorySizeSlider->getPointerSize();
+    int b = lineSizeSlider->getPointerSize();
+    int c =  setsSlider->getPointerSize();
+    int t = a - b - c;
+    emit changed(a, b, c, t);
+}
+
 void ParametersView::mainMemorySizeChanged(int n) {
     // clamp slider sizes to be no bigger than memory size allows
     setsSlider->setPointerRange(0, std::min(n-1, 16)); // subtract 1 since min pointerSize for lines = 1
@@ -117,6 +125,7 @@ void ParametersView::mainMemorySizeChanged(int n) {
             lineSizeSlider->setPointerSize(n);
         }
     }
+    emitChanged();
 }
 void ParametersView::lineSizeChanged(int n) {
    // take from sets with overflow
@@ -124,6 +133,7 @@ void ParametersView::lineSizeChanged(int n) {
         int newSetsSize = mainMemorySizeSlider->getPointerSize() - n;
         setsSlider->setPointerSize(newSetsSize);
    }
+   emitChanged();
 }
 
 void ParametersView::numSetsChanged(int n) {
@@ -132,6 +142,7 @@ void ParametersView::numSetsChanged(int n) {
          int newLineSizeSize = mainMemorySizeSlider->getPointerSize() - n;
          lineSizeSlider->setPointerSize(newLineSizeSize);
     }
+    emitChanged();
 }
 
 ParametersView::ParametersView(QWidget *parent) : QWidget(parent)
